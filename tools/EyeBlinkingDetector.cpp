@@ -99,13 +99,13 @@ void EyeBlinkingDetector::RatioBlink(const dlib::full_object_detection& shape)
     double EAR_total = ((EAR_right+EAR_left)/2);
 
     buffer_classes_eyes[buffer_count_eyes % buffer_size_eyes] = EAR_total;
-    buffer_orizontal[buffer_count_eyes % buffer_size_eyes] = p36_39_sqrt;
     buffer_count_eyes++;
     
     if (buffer_count_eyes >= buffer_size_eyes)
     {
-        if ((buffer_classes_eyes[1] <= (buffer_classes_eyes[0]*0.85) && (buffer_classes_eyes[1] <= (buffer_classes_eyes[2]*0.85)))
-            || (buffer_classes_eyes[1] >= (buffer_classes_eyes[0]*1.15) && (buffer_classes_eyes[1] >= (buffer_classes_eyes[2]*1.15)))) 
+        // if there is a variation of, at least, the 20% of the eyes ratio => blink detected
+        if ((buffer_classes_eyes[1] <= (buffer_classes_eyes[0]*0.8) && (buffer_classes_eyes[1] <= (buffer_classes_eyes[2]*0.8)))
+            || (buffer_classes_eyes[1] >= (buffer_classes_eyes[0]*1.2) && (buffer_classes_eyes[1] >= (buffer_classes_eyes[2]*1.2)))) 
         {
             std::cout<<"---------------------------"<<std::endl;
             std::cout<<"----------BLINK LANDMARK----------"<<std::endl;
@@ -135,47 +135,10 @@ cv::Rect EyeBlinkingDetector::findFace(cv::Mat mat_bgr, float confidence_thresho
 
     net_.forward(outs, net_out_names_);
 
-    //std::vector<int> class_ids;
     std::vector<float> confidences;
     std::vector<cv::Rect> rects;
     // region type
-    if (net_out_layert_type_ == "DetectionOutput")
-    {
-        for (auto &mat : outs)
-        {
-            float *data = (float*)mat.data;
-            for (size_t i = 0; i < mat.total(); i += 7)
-            {
-                float confidence = data[i + 2];
-                if (confidence > confidence_threshold)
-                {
-                    int left   = (int)data[i + 3];
-                    int top    = (int)data[i + 4];
-                    int right  = (int)data[i + 5];
-                    int bottom = (int)data[i + 6];
-                    int width  = right - left + 1;
-                    int height = bottom - top + 1;
-                    
-                    if ((width <= 2) || (height <= 2))
-                    {
-                        left   = (int)(data[i + 3] * mat_bgr.cols);
-                        top    = (int)(data[i + 4] * mat_bgr.rows);
-                        right  = (int)(data[i + 5] * mat_bgr.cols);
-                        bottom = (int)(data[i + 6] * mat_bgr.rows);
-                        width  = right - left + 1;
-                        height = bottom - top + 1;
-                    }
-                    //const int class_id = (int)(data[i + 1]) - 1;
-                    //std::cout << "class id " << class_id << std::endl;
-                    //std::cout << "box " << left << " " << top << " " << width << " " << height << std::endl;
-                    //class_ids.push_back (class_id);
-                    confidences.push_back((float)confidence);
-                    rects.push_back(cv::Rect(left, top, width, height));
-                }
-            }
-        }
-    }
-    else if (net_out_layert_type_ == "Region")
+    if (net_out_layert_type_ == "Region")
     {
         for (auto &mat : outs)
         {
@@ -237,13 +200,14 @@ void EyeBlinkingDetector::detect(cv::Mat frame)
     float nms_threshold = 0.4f; // non maximum suppression
     float threshold_area = 0.1;
 
-    
+    // search a face usign YOLO
     cv::Rect rect_out = findFace(frame, confidence_threshold, nms_threshold, threshold_area);
    
     if(rect_out.empty())
         return;
     else
     {
+        // if a face is detected post the corresponding event
         FaceDetected obj(rect_out);
         FaceDetectedEvent event(obj);
         face_dispacher.post(event);
@@ -256,9 +220,10 @@ void EyeBlinkingDetector::detect(cv::Mat frame)
 
     dlib::full_object_detection shape = face_shape_predictor_(img, rect);
 
-    CascadeBlink(frame, rect_out);
+    //CascadeBlink(frame, rect_out);
     RatioBlink(shape);
 
+    // if a blink is detected post the event
     if(result_cascade || result_ratio)
     {
         BlinkDetected obj;

@@ -3,11 +3,7 @@ project(exe)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-#set(CMAKE_CXX_COMPILER mpicxx)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-#find_package(MPI REQUIRED)
-#include_directories(${MPI_INCLUDE_DIRS})
 
 # events
 set(EVENTS_PATH "events" CACHE STRING "Events folder")
@@ -25,8 +21,6 @@ include_directories(${CPP_PATH})
 file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.hpp")
 
 add_executable(exe ${APP_CPP} ${APP_TOOLS} ${APP_EVENTS}) 
-#target_include_directories(Test PRIVATE ${MPI_CXX_INCLUDE_PATH})
-#target_compile_options(Test PRIVATE ${MPI_CXX_COMPILE_FLAGS})
 
 # Opencv
 find_package(OpenCV)
@@ -35,5 +29,5 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 #Dllib
 find_package(dlib REQUIRED)
 
-target_link_libraries(exe -lboost_system -lboost_filesystem dlib::dlib ${OpenCV_LIBS})# ${MPI_CXX_LIBRARIES} ${MPI_CXX_LINK_FLAGS}
+target_link_libraries(exe dlib::dlib ${OpenCV_LIBS})
 
