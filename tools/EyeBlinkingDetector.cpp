@@ -3,19 +3,23 @@
 
 bool EyeBlinkingDetector::loadModels(std::string& models_path)
 {
-    if(!detector_eyes.load(models_path + "/haarcascade_eye_tree_eyeglasses.xml"))
+    try
     {
-        std::cout << "LOAD CASCADE MODEL FAILED" << std::endl;
+        detector_eyes.load(models_path + "/haarcascade_eye_tree_eyeglasses.xml");
+        dlib::deserialize(models_path + "/" +"shape_predictor_68_face_landmarks.dat") >> face_shape_predictor_;
+        const std::string weights_filename = models_path + "/" + "yolov3-tiny_face-wider.weights";
+        std::string config_filename  = models_path + "/" + "yolov3-tiny_face-wider.cfg";
+        net_ = cv::dnn::readNetFromDarknet(config_filename, weights_filename);
+        net_input_size_ = cv::Size(416, 416);
+        net_input_scale_ = 1.0 / 255;
+        return true;
+    }
+    catch(const cv::Exception & ex)
+    {
+        std::cout<<"LOAD MODEL FAILED"<<std::endl;
+        std::cout<<ex.what()<<std::endl;
         return false;
     }
-    dlib::deserialize(models_path + "/" +"shape_predictor_68_face_landmarks.dat") >> face_shape_predictor_;
-    const std::string weights_filename = models_path + "/" + "yolov3-tiny_face-wider.weights";
-    std::string config_filename  = models_path + "/" + "yolov3-tiny_face-wider.cfg";
-    net_ = cv::dnn::readNetFromDarknet(config_filename, weights_filename);
-    net_input_size_ = cv::Size(416, 416);
-    net_input_scale_ = 1.0 / 255;
-    return true;
-
 }
 
 void EyeBlinkingDetector::CascadeBlink(cv::Mat mat, cv::Rect roi)
