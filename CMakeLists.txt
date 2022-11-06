@@ -5,6 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Opencv
+find_package(OpenCV)
+include_directories(${OpenCV_INCLUDE_DIRS})
+
+#Dllib
+find_package(dlib REQUIRED)
+
 # events
 set(EVENTS_PATH "events" CACHE STRING "Events folder")
 include_directories(${EVENTS_PATH})
@@ -21,13 +28,6 @@ include_directories(${CPP_PATH})
 file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.hpp")
 
 add_executable(exe ${APP_CPP} ${APP_TOOLS} ${APP_EVENTS}) 
-
-# Opencv
-find_package(OpenCV)
-include_directories(${OpenCV_INCLUDE_DIRS})
-
-#Dllib
-find_package(dlib REQUIRED)
 
 target_link_libraries(exe dlib::dlib ${OpenCV_LIBS})
 

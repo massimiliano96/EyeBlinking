@@ -1,0 +1,175 @@
+[settings]
+    arch=x86_64
+    build_type=Release
+    compiler=clang
+    compiler.cppstd=11
+    compiler.libcxx=libc++
+    compiler.version=14
+    os=Macos
+
+[requires]
+    dlib/19.Y.Z
+    opencv/4.Y.Z
+
+[options]
+
+
+[full_settings]
+    arch=x86_64
+    build_type=Release
+    compiler=clang
+    compiler.cppstd=11
+    compiler.libcxx=libc++
+    compiler.version=14
+    os=Macos
+
+[full_requires]
+    ade/0.1.1f:bae13b553097dcbf04bb7f6df3e5fa8e8c66ef15
+    dlib/19.24:112d519d02c91103e5606c155feac860f117c9d7
+    eigen/3.3.9:5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9
+    giflib/5.2.1:606388d5ad15ac5cb39689eafe5589819619812d
+    jasper/2.0.33:ea271747d599fb9edba70c1f28814e9b0b936cd2
+    jbig/20160605:4f1e50280abb925ba687d8e1aa5f0e7d952be4ba
+    libdeflate/1.12:deff546af87401b558d0514205987d78de43cd78
+    libjpeg/9d:deff546af87401b558d0514205987d78de43cd78
+    libpng/1.6.37:5939ac858b3505cab3d24595ec82e404b21143aa
+    libtiff/4.3.0:73ff0ea92005fdd12575b2c8949fba99dba350af
+    libwebp/1.2.2:2c21ebb5b839c34b91855a2c2798a76d3255a464
+    openblas/0.3.17:0bd662deda863e1fb0749595ea9a7e8cfc767137
+    opencv/4.5.5:675192b2bd366d21405e88c4adffca8d6886104e
+    openexr/2.5.7:1e44c9546858ec246c108c4eed3b9f8489f463af
+    protobuf/3.17.1:a14600f0f9bb66df03f6a75617de84ab126609a1
+    quirc/1.1:2d6bb3676e6c295e414c32e7179b2a083a79d39c
+    sqlite3/3.38.5:98af28546751a51843ed61a020a36b6aac8d234b
+    xz_utils/5.2.5:deff546af87401b558d0514205987d78de43cd78
+    zlib/1.2.12:deff546af87401b558d0514205987d78de43cd78
+    zstd/1.5.2:dbe5bbf97d622ff654011cfae0ddf1ef33adb08b
+
+[full_options]
+    ade:fPIC=True
+    dlib:fPIC=True
+    dlib:shared=False
+    dlib:with_avx=False
+    dlib:with_gif=True
+    dlib:with_jpeg=True
+    dlib:with_openblas=True
+    dlib:with_png=True
+    dlib:with_sqlite3=True
+    dlib:with_sse2=auto
+    dlib:with_sse4=False
+    dlib:with_webp=True
+    eigen:MPL2_only=False
+    giflib:fPIC=True
+    giflib:shared=False
+    giflib:utils=True
+    jasper:fPIC=True
+    jasper:shared=False
+    jasper:with_libjpeg=libjpeg
+    jbig:build_executables=True
+    jbig:fPIC=True
+    jbig:shared=False
+    libdeflate:fPIC=True
+    libdeflate:shared=False
+    libjpeg:fPIC=True
+    libjpeg:shared=False
+    libpng:api_prefix=
+    libpng:fPIC=True
+    libpng:shared=False
+    libpng:sse=True
+    libtiff:cxx=True
+    libtiff:fPIC=True
+    libtiff:jbig=True
+    libtiff:jpeg=libjpeg
+    libtiff:libdeflate=True
+    libtiff:lzma=True
+    libtiff:shared=False
+    libtiff:webp=True
+    libtiff:zlib=True
+    libtiff:zstd=True
+    libwebp:fPIC=True
+    libwebp:near_lossless=True
+    libwebp:shared=False
+    libwebp:swap_16bit_csp=False
+    libwebp:with_simd=True
+    openblas:build_lapack=False
+    openblas:dynamic_arch=False
+    openblas:fPIC=True
+    openblas:shared=False
+    openblas:use_thread=True
+    opencv:contrib=True
+    opencv:contrib_freetype=False
+    opencv:contrib_sfm=False
+    opencv:cpu_baseline=SSE2
+    opencv:cpu_dispatch=None
+    opencv:dnn=True
+    opencv:fPIC=True
+    opencv:nonfree=False
+    opencv:parallel=False
+    opencv:shared=False
+    opencv:with_ade=True
+    opencv:with_cuda=False
+    opencv:with_eigen=True
+    opencv:with_ffmpeg=False
+    opencv:with_imgcodec_hdr=False
+    opencv:with_imgcodec_pfm=False
+    opencv:with_imgcodec_pxm=False
+    opencv:with_imgcodec_sunraster=False
+    opencv:with_ipp=False
+    opencv:with_jpeg=libjpeg
+    opencv:with_jpeg2000=jasper
+    opencv:with_openexr=True
+    opencv:with_png=True
+    opencv:with_quirc=True
+    opencv:with_tiff=True
+    opencv:with_webp=True
+    openexr:fPIC=True
+    openexr:shared=False
+    protobuf:debug_suffix=True
+    protobuf:fPIC=True
+    protobuf:lite=False
+    protobuf:shared=False
+    protobuf:with_rtti=True
+    protobuf:with_zlib=True
+    quirc:fPIC=True
+    quirc:max_regions=254
+    quirc:shared=False
+    sqlite3:build_executable=True
+    sqlite3:disable_gethostuuid=False
+    sqlite3:enable_column_metadata=True
+    sqlite3:enable_dbpage_vtab=False
+    sqlite3:enable_dbstat_vtab=False
+    sqlite3:enable_default_secure_delete=False
+    sqlite3:enable_default_vfs=True
+    sqlite3:enable_explain_comments=False
+    sqlite3:enable_fts3=False
+    sqlite3:enable_fts3_parenthesis=False
+    sqlite3:enable_fts4=False
+    sqlite3:enable_fts5=False
+    sqlite3:enable_json1=False
+    sqlite3:enable_math_functions=True
+    sqlite3:enable_preupdate_hook=False
+    sqlite3:enable_rtree=True
+    sqlite3:enable_soundex=False
+    sqlite3:enable_unlock_notify=True
+    sqlite3:fPIC=True
+    sqlite3:max_blob_size=None
+    sqlite3:max_column=None
+    sqlite3:max_variable_number=None
+    sqlite3:omit_deprecated=False
+    sqlite3:omit_load_extension=False
+    sqlite3:shared=False
+    sqlite3:threadsafe=1
+    sqlite3:use_alloca=False
+    xz_utils:fPIC=True
+    xz_utils:shared=False
+    zlib:fPIC=True
+    zlib:shared=False
+    zstd:fPIC=True
+    zstd:shared=False
+    zstd:threading=True
+
+[recipe_hash]
+
+
+[env]
+
