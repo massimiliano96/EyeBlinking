@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+
 # Opencv
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -31,3 +32,4 @@ add_executable(exe ${APP_CPP} ${APP_TOOLS} ${APP_EVENTS})
 
 target_link_libraries(exe dlib::dlib ${OpenCV_LIBS})
 
+add_test(NAME array_tests WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin COMMAND array_tests)

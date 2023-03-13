@@ -12,6 +12,10 @@ class EyeBlinkDetectorConan(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv", "VirtualRunEnv"
     apply_env = False
 
+    generators = [
+        "cmake"
+    ]
+
     requires = [
         ("opencv/4.5.5"),
         ("dlib/19.24")

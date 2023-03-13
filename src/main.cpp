@@ -4,7 +4,6 @@
 #include "../events/FaceDetected.hpp"
 #include "../events/BlinkDetected.hpp"
 
-#define MODELS_PATH "/usr/share/phygitalai/models"
 
 // this function draws the face rectangle on the current frame when the FaceDetected event is posted
 void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
