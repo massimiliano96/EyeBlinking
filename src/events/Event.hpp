@@ -1,14 +1,6 @@
-#ifndef EVENT_HH__
-#define EVENT_HH__
+#ifndef _EVENT_HPP__
+#define _EVENT_HPP__
 #include <string>
-
-/*
-  @class Event
-  @brief Base class for all events
-  This class provides the interface that needs to be implemented by an event.
-  Each dependent class is required to implement type() to uniquely identify
-  events. 
-*/
 
 template <typename T>
 class Event{

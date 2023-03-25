@@ -10,26 +10,23 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-#Dllib
-find_package(dlib REQUIRED)
-
 # events
-set(EVENTS_PATH "events" CACHE STRING "Events folder")
+set(EVENTS_PATH "src/events" CACHE STRING "Events folder")
 include_directories(${EVENTS_PATH})
 file(GLOB_RECURSE APP_EVENTS "${EVENTS_PATH}/*.hpp" "${EVENTS_PATH}/*.cpp")
 
-#Tools
-set(TOOLS_PATH "tools" CACHE STRING "Tools folder")
-include_directories(${TOOLS_PATH})
-file(GLOB_RECURSE APP_TOOLS "${TOOLS_PATH}/*.h" "${TOOLS_PATH}/*.cpp" "${TOOLS_PATH}/*.hpp")
+#Detection
+set(DETECTION_PATH "detection" CACHE STRING "Detection folder")
+include_directories(${DETECTIONPATH})
+file(GLOB_RECURSE APP_DETECTION "${DETECTION_PATH}/*.h" "${DETECTION_PATH}/*.cpp" "${DETECTION_PATH}/*.hpp")
 
 # Cpp
 set(CPP_PATH "cpp" CACHE STRING "cpp folder")
 include_directories(${CPP_PATH})
 file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.hpp")
 
-add_executable(exe ${APP_CPP} ${APP_TOOLS} ${APP_EVENTS}) 
+add_executable(exe "src/main.cpp" ${APP_DETECTION} ${APP_EVENTS}) 
 
-target_link_libraries(exe dlib::dlib ${OpenCV_LIBS})
+target_link_libraries(exe ${OpenCV_LIBS})
 
 add_test(NAME array_tests WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin COMMAND array_tests)

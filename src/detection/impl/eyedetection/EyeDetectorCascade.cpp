@@ -12,7 +12,7 @@ EyeDetectorCascade::EyeDetectorCascade(std::string& modelFilename): CascadeDetec
     }
     catch(const cv::Exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << e.what() << << std::endl;
         throw std::runtime_error("Failed to load Face Detector Cascade model");
     }
     
@@ -27,7 +27,7 @@ cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
     }
     catch(const cv::Exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << e.what() << std::endl;
     }
 }
 
@@ -42,6 +42,6 @@ std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image)
     }
     catch(const cv::Exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << e.what() << std::endl;
     }
 }

@@ -3,7 +3,7 @@
 
 #include "detection/CascadeDetector.hpp"
 
-#include "opencv2/objdetect.hpp"
+#include <opencv2/objdetect.hpp>
 
 class EyeDetectorCascade : public CascadeDetector
 {
