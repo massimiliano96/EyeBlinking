@@ -4,18 +4,17 @@
 
 #include <iostream>
 
-EyeDetectorCascade::EyeDetectorCascade(std::string& modelFilename): CascadeDetector() 
+EyeDetectorCascade::EyeDetectorCascade(std::string& modelFilename) : CascadeDetector()
 {
     try
     {
         detector.load(modelFilename);
     }
-    catch(const cv::Exception& e)
+    catch (const cv::Exception& e)
     {
-        std::cerr << e.what() << << std::endl;
+        std::cerr << e.what() << std::endl;
         throw std::runtime_error("Failed to load Face Detector Cascade model");
     }
-    
 }
 
 cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
@@ -25,23 +24,25 @@ cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
         cv::Mat roiImage = image.clone();
         return roiImage(faceRoi);
     }
-    catch(const cv::Exception& e)
+    catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
+        throw std::runtime_error(e.what());
     }
 }
 
 std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image)
 {
     try
-    {  
+    {
         std::vector<cv::Rect> detectedEyes;
         // Detect faces
-        detector.detectMultiScale( image, detectedEyes );
+        detector.detectMultiScale(image, detectedEyes);
         return detectedEyes;
     }
-    catch(const cv::Exception& e)
+    catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
+        throw std::runtime_error(e.what());
     }
 }
