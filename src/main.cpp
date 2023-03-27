@@ -1,13 +1,14 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
-#include "../tools/EyeBlinkingDetector.hpp"
-#include "../events/FaceDetected.hpp"
-#include "../events/BlinkDetected.hpp"
+#include "EyeBlinkingDetector.hpp"
+#include "events/FaceDetected.hpp"
+#include "events/BlinkDetected.hpp"
 
 
 // this function draws the face rectangle on the current frame when the FaceDetected event is posted
 void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
 {
+    /*
     try
     {
         FaceDetected obj = event.type();
@@ -19,10 +20,12 @@ void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
     {
         std::cout <<"Exception Thrown : "<<e.what()<<std::endl;
     }
+    */
 }
 //this function write "BLINK DETECTED" on the current frame when the BlinkDetected event is posted
 void onEventBlinkDetected(const Event<BlinkDetected>& event, cv::Mat& frame)
 {
+    /*
     try
     {
         BlinkDetected obj = event.type();
@@ -33,11 +36,13 @@ void onEventBlinkDetected(const Event<BlinkDetected>& event, cv::Mat& frame)
     {
         std::cout<<"Exception Thrown : "<<e.what()<<std::endl;
     }
+    */
 }
 
 
 int main(int argc, char *argv[])
 {
+    /*
         EyeBlinkingDetector detector(MODELS_PATH);
 
         cv::VideoCapture cap(0);
@@ -75,6 +80,6 @@ int main(int argc, char *argv[])
         }
         cap.release();
         cv::destroyAllWindows();
-
+*/
     return 0;
 }

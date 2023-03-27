@@ -67,62 +67,6 @@ void EyeBlinkingDetector::CascadeBlink(cv::Mat mat, cv::Rect roi)
     }  
 }
 
-void EyeBlinkingDetector::RatioBlink(const dlib::full_object_detection& shape)
-{
-    result_ratio = false;
-    // check left eyes
-    double P37_41_x = shape.part(37).x() - shape.part(41).x();
-    double P37_41_y=  shape.part(37).y() -shape.part(41).y() ;
-    double p37_41_sqrt=sqrt((P37_41_x * P37_41_x) + (P37_41_y * P37_41_y));
-
-    double P38_40_x = shape.part(38).x() - shape.part(40).x();
-    double P38_40_y = shape.part(38).y() - shape.part(40).y();
-    double p38_40_sqrt=sqrt((P38_40_x * P38_40_x) + (P38_40_y * P38_40_y));
-
-    double P36_39_x = shape.part(36).x() - shape.part(39).x();  
-    double P36_39_y = shape.part(36).y() - shape.part(39).y();
-    double p36_39_sqrt=sqrt((P36_39_x * P36_39_x) + (P36_39_y * P36_39_y));
-
-    double EAR_left= (p37_41_sqrt +  p38_40_sqrt) / (2* p36_39_sqrt);
-
-    // check right eyes
-    double P43_47_x = shape.part(43).x() - shape.part(47).x();
-    double P43_47_y=  shape.part(43).y() -shape.part(47).y() ;
-    double p43_47_sqrt=sqrt((P43_47_x * P43_47_x) + (P43_47_y * P43_47_y));
-
-    double P44_46_x = shape.part(44).x() - shape.part(46).x();
-    double P44_46_y = shape.part(44).y() - shape.part(46).y();
-    double p44_46_sqrt=sqrt((P44_46_x * P44_46_x) + (P44_46_y * P44_46_y));
-
-    double P42_45_x = shape.part(42).x() - shape.part(45).x();  
-    double P42_45_y = shape.part(42).y() - shape.part(45).y();
-    double p42_45_sqrt=sqrt((P42_45_x * P42_45_x) + (P42_45_y * P42_45_y));
-
-    double EAR_right= (p43_47_sqrt +  p44_46_sqrt) / (2* p42_45_sqrt);
-
-    double EAR_total = ((EAR_right+EAR_left)/2);
-
-    buffer_classes_eyes[buffer_count_eyes % buffer_size_eyes] = EAR_total;
-    buffer_count_eyes++;
-    
-    if (buffer_count_eyes >= buffer_size_eyes)
-    {
-        // if there is a variation of, at least, the 20% of the eyes ratio => blink detected
-        if ((buffer_classes_eyes[1] <= (buffer_classes_eyes[0]*0.8) && (buffer_classes_eyes[1] <= (buffer_classes_eyes[2]*0.8)))
-            || (buffer_classes_eyes[1] >= (buffer_classes_eyes[0]*1.2) && (buffer_classes_eyes[1] >= (buffer_classes_eyes[2]*1.2)))) 
-        {
-            std::cout<<"---------------------------"<<std::endl;
-            std::cout<<"----------BLINK LANDMARK----------"<<std::endl;
-            std::cout<<"---------------------------"<<std::endl;
-            result_ratio = true;
-        }
-        else
-        {
-            result_ratio = false;
-        }
-    }
-}
-
 cv::Rect EyeBlinkingDetector::findFace(cv::Mat mat_bgr, float confidence_threshold, float nms_threshold, float threshold_area)
 {
     cv::Mat blob;

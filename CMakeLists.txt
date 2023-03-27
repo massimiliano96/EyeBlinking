@@ -5,27 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-
 # Opencv
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-# events
-set(EVENTS_PATH "src/events" CACHE STRING "Events folder")
-include_directories(${EVENTS_PATH})
-file(GLOB_RECURSE APP_EVENTS "${EVENTS_PATH}/*.hpp" "${EVENTS_PATH}/*.cpp")
-
-#Detection
-set(DETECTION_PATH "detection" CACHE STRING "Detection folder")
-include_directories(${DETECTIONPATH})
-file(GLOB_RECURSE APP_DETECTION "${DETECTION_PATH}/*.h" "${DETECTION_PATH}/*.cpp" "${DETECTION_PATH}/*.hpp")
+set(EYE_BLINKING_PATH "src/eyeblinking" CACHE STRING "EYE_BLINKING folder")
+include_directories(${EYE_BLINKING_PATH})
+file(GLOB_RECURSE APP_EYE_BLINKING "${EYE_BLINKING_PATH}/*.hpp" "${EYE_BLINKING_PATH}/*.cpp")
 
 # Cpp
 set(CPP_PATH "cpp" CACHE STRING "cpp folder")
 include_directories(${CPP_PATH})
 file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.hpp")
 
-add_executable(exe "src/main.cpp" ${APP_DETECTION} ${APP_EVENTS}) 
+add_executable(exe "src/main.cpp" ${APP_EYE_BLINKING})
 
 target_link_libraries(exe ${OpenCV_LIBS})
 
