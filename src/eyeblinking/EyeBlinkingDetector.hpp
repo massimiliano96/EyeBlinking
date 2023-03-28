@@ -14,14 +14,20 @@
 class EyeBlinkingDetector
 {
 public:
-    EyeBlinkingDetector(std::string models_path);
+    EyeBlinkingDetector(std::string modelsPath);
 
-    void detect(cv::Mat frames);
+    void process(std::vector<cv::Mat>&);
+    cv::Rect detectFace(cv::Mat&);
+    std::vector<cv::Rect> detectEyes(cv::Mat&);
+
+    const std::shared_ptr<Dispatcher<BlinkDetected>> getBlinkEventDispacher();
+    const std::shared_ptr<Dispatcher<FaceDetected>> getFaceEventDispacher();
 
 private:
-    Dispatcher<BlinkDetected> blinkDetectedDispacher;
-    Dispatcher<FaceDetected> faceDetectedDispacher;
-    std::vector<std::shared_ptr<CascadeDetector>> detectors;
+    std::shared_ptr<Dispatcher<BlinkDetected>> blinkDetectedDispacher;
+    std::shared_ptr<Dispatcher<FaceDetected>> faceDetectedDispacher;
+    std::shared_ptr<CascadeDetector> faceDetector;
+    std::shared_ptr<CascadeDetector> eyeDetector;
 };
 
 #endif

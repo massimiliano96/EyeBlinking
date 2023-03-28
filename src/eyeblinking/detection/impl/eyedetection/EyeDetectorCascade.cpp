@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-EyeDetectorCascade::EyeDetectorCascade(std::string& modelFilename) : CascadeDetector()
+EyeDetectorCascade::EyeDetectorCascade(const std::string& modelFilename) : CascadeDetector()
 {
     try
     {
@@ -31,13 +31,14 @@ cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
     }
 }
 
-std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image)
+std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image, cv::Rect roi)
 {
     try
     {
+        cv::Mat preparedMat = preProcessImage(image, roi);
         std::vector<cv::Rect> detectedEyes;
         // Detect faces
-        detector.detectMultiScale(image, detectedEyes);
+        detector.detectMultiScale(preparedMat, detectedEyes);
         return detectedEyes;
     }
     catch (const cv::Exception& e)
