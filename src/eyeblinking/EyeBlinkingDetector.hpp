@@ -17,11 +17,14 @@ public:
     EyeBlinkingDetector(std::string modelsPath);
 
     void process(std::vector<cv::Mat>&);
-    cv::Rect detectFace(cv::Mat&);
-    std::vector<cv::Rect> detectEyes(cv::Mat&);
 
     const std::shared_ptr<Dispatcher<BlinkDetected>> getBlinkEventDispacher();
     const std::shared_ptr<Dispatcher<FaceDetected>> getFaceEventDispacher();
+
+protected:
+    cv::Rect detectFace(cv::Mat&);
+    std::vector<cv::Rect> detectEyes(cv::Mat&, cv::Rect&);
+    bool checkEyeBlink(std::list<std::vector<cv::Rect>>&);
 
 private:
     std::shared_ptr<Dispatcher<BlinkDetected>> blinkDetectedDispacher;
