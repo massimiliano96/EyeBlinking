@@ -10,7 +10,9 @@ public:
 
     virtual ~CascadeDetector() = default;
 
-    virtual std::vector<cv::Rect> detect(cv::Mat& image, cv::Rect roi = cv::Rect(0, 0, 0, 0)) = 0;
+    virtual std::vector<cv::Rect> detect(cv::Mat& image) = 0;
+
+    virtual cv::Mat preProcessImage(cv::Mat&, cv::Rect&) = 0;
 };
 
 #endif

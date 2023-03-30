@@ -17,14 +17,14 @@ FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : Cas
     }
 }
 
-cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image)
+cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& roi)
 {
     try
     {
         cv::Mat grayImage;
         cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(grayImage, grayImage);
-        return grayImage;
+        return grayImage(roi);
     }
     catch (const cv::Exception& e)
     {
@@ -33,14 +33,13 @@ cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image)
     }
 }
 
-std::vector<cv::Rect> FaceDetectorCascade::detect(cv::Mat& image, cv::Rect roi)
+std::vector<cv::Rect> FaceDetectorCascade::detect(cv::Mat& image)
 {
     try
     {
-        cv::Mat preparedMat = preProcessImage(image);
         std::vector<cv::Rect> detectedFaces;
         // Detect faces
-        detector.detectMultiScale(preparedMat, detectedFaces);
+        detector.detectMultiScale(image, detectedFaces);
         return detectedFaces;
     }
     catch (const cv::Exception& e)

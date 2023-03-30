@@ -17,7 +17,7 @@ EyeDetectorCascade::EyeDetectorCascade(const std::string& modelFilename) : Casca
     }
 }
 
-cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
+cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& faceRoi)
 {
     try
     {
@@ -31,14 +31,13 @@ cv::Mat EyeDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect faceRoi)
     }
 }
 
-std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image, cv::Rect roi)
+std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image)
 {
     try
     {
-        cv::Mat preparedMat = preProcessImage(image, roi);
         std::vector<cv::Rect> detectedEyes;
         // Detect faces
-        detector.detectMultiScale(preparedMat, detectedEyes);
+        detector.detectMultiScale(image, detectedEyes);
         return detectedEyes;
     }
     catch (const cv::Exception& e)

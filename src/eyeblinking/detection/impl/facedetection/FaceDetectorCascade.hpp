@@ -10,9 +10,9 @@ class FaceDetectorCascade : public CascadeDetector
 public:
     FaceDetectorCascade(const std::string& modelFilename);
 
-    std::vector<cv::Rect> detect(cv::Mat& image, cv::Rect roi = cv::Rect(0, 0, 0, 0)) override;
+    std::vector<cv::Rect> detect(cv::Mat& image) override;
 
-    cv::Mat preProcessImage(cv::Mat& image);
+    cv::Mat preProcessImage(cv::Mat& image, cv::Rect& roi) override;
 
 private:
     cv::CascadeClassifier detector;

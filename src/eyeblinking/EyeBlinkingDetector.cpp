@@ -51,7 +51,9 @@ bool EyeBlinkingDetector::checkEyeBlink(std::list<std::vector<cv::Rect>>& eyes)
 
 cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
 {
-    std::vector<cv::Rect> detectedFaces = faceDetector->detect(image);
+    cv::Rect roi = cv::Rect(0, 0, image.cols, image.rows);
+    cv::Mat preparedImage = faceDetector->preProcessImage(image, roi);
+    std::vector<cv::Rect> detectedFaces = faceDetector->detect(preparedImage);
     switch (detectedFaces.size())
     {
         case 0:
@@ -78,7 +80,8 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
 
 std::vector<cv::Rect> EyeBlinkingDetector::detectEyes(cv::Mat& image, cv::Rect& faceRoi)
 {
-    std::vector<cv::Rect> detectedEyes = eyeDetector->detect(image, faceRoi);
+    cv::Mat preparedImage = eyeDetector->preProcessImage(image, faceRoi);
+    std::vector<cv::Rect> detectedEyes = eyeDetector->detect(preparedImage);
     switch (detectedEyes.size())
     {
         case 0:
