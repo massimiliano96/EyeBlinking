@@ -18,8 +18,8 @@ public:
 
     void process(std::vector<cv::Mat>&);
 
-    const std::shared_ptr<Dispatcher<BlinkDetected>> getBlinkEventDispacher();
-    const std::shared_ptr<Dispatcher<FaceDetected>> getFaceEventDispacher();
+    Dispatcher<BlinkDetected>& getBlinkEventDispacher();
+    Dispatcher<FaceDetected>& getFaceEventDispacher();
 
 protected:
     cv::Rect detectFace(cv::Mat&);
@@ -27,8 +27,8 @@ protected:
     bool checkEyeBlink(std::list<std::vector<cv::Rect>>&);
 
 private:
-    std::shared_ptr<Dispatcher<BlinkDetected>> blinkDetectedDispacher;
-    std::shared_ptr<Dispatcher<FaceDetected>> faceDetectedDispacher;
+    Dispatcher<BlinkDetected> blinkDetectedDispacher;
+    Dispatcher<FaceDetected> faceDetectedDispacher;
     std::shared_ptr<CascadeDetector> faceDetector;
     std::shared_ptr<CascadeDetector> eyeDetector;
 };

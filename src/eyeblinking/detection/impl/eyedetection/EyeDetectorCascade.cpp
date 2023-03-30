@@ -3,17 +3,23 @@
 #include <opencv2/imgproc.hpp>
 
 #include <iostream>
+#include <filesystem>
 
 EyeDetectorCascade::EyeDetectorCascade(const std::string& modelFilename) : CascadeDetector()
 {
     try
     {
+        if (std::filesystem::exists(modelFilename)) {
+            std::cout << "File exists!" << std::endl;
+        } else {
+            std::cout << "File does not exist." << std::endl;
+        }
         detector.load(modelFilename);
     }
     catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
-        throw std::runtime_error("Failed to load Face Detector Cascade model");
+        throw std::runtime_error("Failed to load Eye Detector Cascade model");
     }
 }
 

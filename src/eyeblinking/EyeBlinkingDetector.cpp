@@ -11,6 +11,7 @@ void EyeBlinkingDetector::process(std::vector<cv::Mat>& frames)
 {
     try
     {
+        std::cout<<"process starts"<<std::endl;
         std::list<std::vector<cv::Rect>> eyes;
         for (std::size_t i = 0; i < frames.size(); i++)
         {
@@ -23,7 +24,7 @@ void EyeBlinkingDetector::process(std::vector<cv::Mat>& frames)
         {
             BlinkDetected obj;
             BlinkDetectedEvent event(obj);
-            this->blinkDetectedDispacher->post(event);
+            this->blinkDetectedDispacher.post(event);
         }
     }
     catch (const cv::Exception& e)
@@ -54,11 +55,16 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
     cv::Rect roi = cv::Rect(0, 0, image.cols, image.rows);
     cv::Mat preparedImage = faceDetector->preProcessImage(image, roi);
     std::vector<cv::Rect> detectedFaces = faceDetector->detect(preparedImage);
+    for (size_t i = 0; i < detectedFaces.size(); i++)
+    {
+        cv::rectangle(image, detectedFaces[i], cv::Scalar(0,0,255));
+    }
+    cv::imwrite("/Users/Massi/Desktop/Repositories/EyeBlinking/prova.jpg", image);
     switch (detectedFaces.size())
     {
         case 0:
         {
-            throw std::runtime_error("No faces found");
+            std::cout <<"No faces found"<<std::endl;
             break;
         }
         case 1:
@@ -66,12 +72,12 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
             std::cout << "Face found" << std::endl;
             FaceDetected face(detectedFaces[0]);
             FaceDetectedEvent event(face);
-            faceDetectedDispacher->post(event);
+            faceDetectedDispacher.post(event);
             break;
         }
         default:
         {
-            throw std::runtime_error("Multiple faces found, show only one face!");
+            std::cout<<"Multiple faces found, show only one face!"<<std::endl;
             break;
         }
     }
@@ -100,15 +106,15 @@ std::vector<cv::Rect> EyeBlinkingDetector::detectEyes(cv::Mat& image, cv::Rect& 
 
 EyeBlinkingDetector::EyeBlinkingDetector(std::string modelsPath)
 {
-    this->faceDetector = std::make_shared<FaceDetectorCascade>(modelsPath + "/" + faceDetectionModel);
     this->eyeDetector = std::make_shared<EyeDetectorCascade>(modelsPath + "/" + eyeDetectiongModel);
+    this->faceDetector = std::make_shared<FaceDetectorCascade>(modelsPath + "/" + faceDetectionModel);
 }
 
-const std::shared_ptr<Dispatcher<BlinkDetected>> EyeBlinkingDetector::getBlinkEventDispacher()
+Dispatcher<BlinkDetected>& EyeBlinkingDetector::getBlinkEventDispacher() 
 {
     return blinkDetectedDispacher;
 }
-const std::shared_ptr<Dispatcher<FaceDetected>> EyeBlinkingDetector::getFaceEventDispacher()
+Dispatcher<FaceDetected>& EyeBlinkingDetector::getFaceEventDispacher()  
 {
     return faceDetectedDispacher;
 }

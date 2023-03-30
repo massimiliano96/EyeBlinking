@@ -3,11 +3,17 @@
 #include <opencv2/imgproc.hpp>
 
 #include <iostream>
+#include <filesystem>
 
 FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : CascadeDetector()
 {
     try
     {
+        if (std::filesystem::exists(modelFilename)) {
+            std::cout << "File exists!" << std::endl;
+        } else {
+            std::cout << "File does not exist." << std::endl;
+        }
         detector.load(modelFilename);
     }
     catch (const cv::Exception& e)

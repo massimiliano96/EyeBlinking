@@ -1,10 +1,12 @@
 #include <iostream>
+#include <filesystem>
+
 #include <opencv2/opencv.hpp>
 #include "EyeBlinkingDetector.hpp"
 #include "events/BlinkDetected.hpp"
 #include "events/FaceDetected.hpp"
 
-#define MODELS_PATH "../models"
+#define MODELS_PATH "models"
 
 // this function draws the face rectangle on the current frame when the FaceDetected event is posted
 void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
@@ -38,8 +40,9 @@ void onEventBlinkDetected(const Event<BlinkDetected>& event, cv::Mat& frame)
 
 int main(int argc, char* argv[])
 {
+    std::string workingDirectory = std::filesystem::current_path();
 
-    EyeBlinkingDetector detector(MODELS_PATH);
+    EyeBlinkingDetector detector(workingDirectory + "/" + MODELS_PATH);
 
     cv::VideoCapture cap(0);
     if (!cap.isOpened())
@@ -57,8 +60,8 @@ int main(int argc, char* argv[])
             cv::Mat frame;
             cap >> frame;
 
-            detector.getFaceEventDispacher()->subscribe(std::bind(&onEventFaceDetected, std::placeholders::_1, frame));
-            detector.getBlinkEventDispacher()->subscribe(std::bind(&onEventBlinkDetected, std::placeholders::_1, frame));
+            detector.getFaceEventDispacher().subscribe(std::bind(&onEventFaceDetected, std::placeholders::_1, frame));
+            detector.getBlinkEventDispacher().subscribe(std::bind(&onEventBlinkDetected, std::placeholders::_1, frame));
 
             // If the frame is empty, break immediately
             if (frame.empty())
@@ -68,9 +71,10 @@ int main(int argc, char* argv[])
             cv::imshow("Frame", frame);
 
             if (imagesBuffer.size() >= 5)
+            {
                 detector.process(imagesBuffer);
-
-            imagesBuffer.resize(0);
+                imagesBuffer.resize(0);
+            }
 
             // Press  ESC on keyboard to exit
             char c = (char)cv::waitKey(25);
