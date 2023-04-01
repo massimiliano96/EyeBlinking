@@ -7,29 +7,32 @@
 const std::string faceDetectionModel = "haarcascade_frontalface_default.xml";
 const std::string eyeDetectiongModel = "haarcascade_eye.xml";
 
-void EyeBlinkingDetector::process(std::vector<cv::Mat>& frames)
+void EyeBlinkingDetector::process(cv::Mat& frame)
 {
     try
-    {
-        std::cout<<"process starts"<<std::endl;
-        std::list<std::vector<cv::Rect>> eyes;
-        for (std::size_t i = 0; i < frames.size(); i++)
+    {        
+        cv::Rect faceRoi = this->detectFace(frame);
+        detectedEyes.emplace_back(this->detectEyes(frame, faceRoi));
+        if(detectedEyes.size() >= 5)
         {
-            cv::Rect faceRoi = this->detectFace(frames[i]);
-            std::vector<cv::Rect> currentEyes = this->detectEyes(frames[i], faceRoi);
-            eyes.emplace_back(currentEyes);
-        }
-        bool isBlinkDetected = this->checkEyeBlink(eyes);
-        if (isBlinkDetected)
-        {
-            BlinkDetected obj;
-            BlinkDetectedEvent event(obj);
-            this->blinkDetectedDispacher.post(event);
+            bool isBlinkDetected = this->checkEyeBlink(detectedEyes);
+            if (isBlinkDetected)
+            {
+                std::cout<<"Blink Detected"<<std::endl;
+                BlinkDetected obj;
+                BlinkDetectedEvent event(obj);
+                this->blinkDetectedDispacher.post(event);
+            }
+            detectedEyes.pop_front();
         }
     }
     catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
+    }
+    catch( const std::runtime_error& error)
+    {
+        std::cerr<<error.what()<<std::endl;
     }
 }
 
@@ -55,16 +58,11 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
     cv::Rect roi = cv::Rect(0, 0, image.cols, image.rows);
     cv::Mat preparedImage = faceDetector->preProcessImage(image, roi);
     std::vector<cv::Rect> detectedFaces = faceDetector->detect(preparedImage);
-    for (size_t i = 0; i < detectedFaces.size(); i++)
-    {
-        cv::rectangle(image, detectedFaces[i], cv::Scalar(0,0,255));
-    }
-    cv::imwrite("/Users/Massi/Desktop/Repositories/EyeBlinking/prova.jpg", image);
     switch (detectedFaces.size())
     {
         case 0:
         {
-            std::cout <<"No faces found"<<std::endl;
+            throw std::runtime_error("No faces found");
             break;
         }
         case 1:
@@ -77,7 +75,7 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
         }
         default:
         {
-            std::cout<<"Multiple faces found, show only one face!"<<std::endl;
+            throw std::runtime_error("Multiple faces found, show only one face!");
             break;
         }
     }

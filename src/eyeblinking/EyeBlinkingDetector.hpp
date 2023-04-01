@@ -16,7 +16,7 @@ class EyeBlinkingDetector
 public:
     EyeBlinkingDetector(std::string modelsPath);
 
-    void process(std::vector<cv::Mat>&);
+    void process(cv::Mat&);
 
     Dispatcher<BlinkDetected>& getBlinkEventDispacher();
     Dispatcher<FaceDetected>& getFaceEventDispacher();
@@ -31,6 +31,8 @@ private:
     Dispatcher<FaceDetected> faceDetectedDispacher;
     std::shared_ptr<CascadeDetector> faceDetector;
     std::shared_ptr<CascadeDetector> eyeDetector;
+
+    std::list<std::vector<cv::Rect>> detectedEyes;
 };
 
 #endif

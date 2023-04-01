@@ -30,7 +30,8 @@ cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& roi)
         cv::Mat grayImage;
         cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(grayImage, grayImage);
-        return grayImage(roi);
+        cv::resize(grayImage, grayImage, cv::Size(300,300));
+        return grayImage;
     }
     catch (const cv::Exception& e)
     {
@@ -45,7 +46,7 @@ std::vector<cv::Rect> FaceDetectorCascade::detect(cv::Mat& image)
     {
         std::vector<cv::Rect> detectedFaces;
         // Detect faces
-        detector.detectMultiScale(image, detectedFaces);
+        detector.detectMultiScale(image, detectedFaces, 1.1, 3, 0, cv::Size(60,60));
         return detectedFaces;
     }
     catch (const cv::Exception& e)

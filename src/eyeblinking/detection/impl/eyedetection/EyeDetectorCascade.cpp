@@ -43,7 +43,7 @@ std::vector<cv::Rect> EyeDetectorCascade::detect(cv::Mat& image)
     {
         std::vector<cv::Rect> detectedEyes;
         // Detect faces
-        detector.detectMultiScale(image, detectedEyes);
+        detector.detectMultiScale(image, detectedEyes, 1.1, 3, 0, cv::Size(20,20));
         return detectedEyes;
     }
     catch (const cv::Exception& e)

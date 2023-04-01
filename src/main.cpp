@@ -17,6 +17,7 @@ void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
         cv::Rect roi = obj.getRoi();
         cv::Scalar color = cv::Scalar(0, 255, 0);
         cv::rectangle(frame, roi, color, 5);
+        cv::imwrite("/Users/Massi/Desktop/Repositories/EyeBlinking/prova.png", frame);
     }
     catch (cv::Exception& e)
     {
@@ -51,8 +52,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    std::vector<cv::Mat> imagesBuffer;
-
     while (1)
     {
         try
@@ -67,14 +66,9 @@ int main(int argc, char* argv[])
             if (frame.empty())
                 break;
 
-            imagesBuffer.push_back(frame);
+            detector.process(frame);
+            
             cv::imshow("Frame", frame);
-
-            if (imagesBuffer.size() >= 5)
-            {
-                detector.process(imagesBuffer);
-                imagesBuffer.resize(0);
-            }
 
             // Press  ESC on keyboard to exit
             char c = (char)cv::waitKey(25);
