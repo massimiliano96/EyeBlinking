@@ -9,6 +9,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_package(OpenCV)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+# Dlib
+find_package(dlib)
+
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
 set(EYE_BLINKING_PATH "src/eyeblinking" CACHE STRING "EYE_BLINKING folder")
@@ -22,7 +25,7 @@ file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.h
 
 add_executable(exe "src/main.cpp" ${APP_EYE_BLINKING})
 
-target_link_libraries(exe ${OpenCV_LIBS})
+target_link_libraries(exe ${OpenCV_LIBS} dlib::dlib)
 
 file(COPY "models" DESTINATION ".")
 

@@ -1,21 +1,27 @@
 #include "EyeBlinkingDetector.hpp"
-#include "detection/impl/eyedetection/EyeDetectorCascade.hpp"
-#include "detection/impl/facedetection/FaceDetectorCascade.hpp"
+#include "detection/cascade/impl/eyedetection/EyeDetectorCascade.hpp"
+#include "detection/cascade/impl/facedetection/FaceDetectorCascade.hpp"
 #include "events/EventType.hpp"
 #include "events/FaceDetected.hpp"
 
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/types_c.h>
+#include <dlib/opencv.h>
+
+
 const std::string faceDetectionModel = "haarcascade_frontalface_default.xml";
 const std::string eyeDetectiongModel = "haarcascade_eye.xml";
+const std::string landmarksDetectionModel = "shape_predictor_68_face_landmarks.dat";
 
 void EyeBlinkingDetector::process(cv::Mat& frame)
 {
     try
     {        
         cv::Rect faceRoi = this->detectFace(frame);
-        detectedEyes.emplace_back(this->detectEyes(frame, faceRoi));
+        this->detectEyes(frame, faceRoi);
         if(detectedEyes.size() >= 5)
         {
-            bool isBlinkDetected = this->checkEyeBlink(detectedEyes);
+            bool isBlinkDetected = this->checkEyeBlink(frame, faceRoi);
             if (isBlinkDetected)
             {
                 std::cout<<"Blink Detected"<<std::endl;
@@ -36,28 +42,22 @@ void EyeBlinkingDetector::process(cv::Mat& frame)
     }
 }
 
-bool EyeBlinkingDetector::checkEyeBlink(std::list<std::vector<cv::Rect>>& eyes)
+bool EyeBlinkingDetector::checkEyeBlink(cv::Mat& image, cv::Rect& faceRoi)
 {
-    int sizeChanges = 0;
-    int lastSize = -1;
-
-    for (const auto& vec : eyes)
-    {
-        if (lastSize != -1 && vec.size() != lastSize)
-        {
-            sizeChanges++;
-        }
-        lastSize = vec.size();
-    }
-
-    return sizeChanges > 1;
+    IplImage iplImg = cvIplImage(image);
+    dlib::cv_image<dlib::bgr_pixel> dlibColorImg(&iplImg);
+    dlib::matrix<dlib::rgb_pixel> dlibMatrix;
+    dlib::assign_image(dlibMatrix, dlibColorImg);
+    const dlib::rectangle& faceRect = dlib::rectangle(faceRoi.x, faceRoi.y, faceRoi.x + faceRoi.width, faceRoi.y + faceRoi.height);
+    dlib::full_object_detection shape = blinkingCascadeDetector(dlibMatrix, faceRect);
+    return true;
 }
 
 cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
 {
-    cv::Rect roi = cv::Rect(0, 0, image.cols, image.rows);
-    cv::Mat preparedImage = faceDetector->preProcessImage(image, roi);
-    std::vector<cv::Rect> detectedFaces = faceDetector->detect(preparedImage);
+    cv::Rect roi(0, 0, image.cols, image.rows);
+    cv::Mat preparedImage = faceCascadeDetector->preProcessImage(image, roi);
+    std::vector<cv::Rect> detectedFaces = faceCascadeDetector->detect(preparedImage);
     switch (detectedFaces.size())
     {
         case 0:
@@ -84,8 +84,8 @@ cv::Rect EyeBlinkingDetector::detectFace(cv::Mat& image)
 
 std::vector<cv::Rect> EyeBlinkingDetector::detectEyes(cv::Mat& image, cv::Rect& faceRoi)
 {
-    cv::Mat preparedImage = eyeDetector->preProcessImage(image, faceRoi);
-    std::vector<cv::Rect> detectedEyes = eyeDetector->detect(preparedImage);
+    cv::Mat preparedImage = eyeCascadeDetector->preProcessImage(image, faceRoi);
+    std::vector<cv::Rect> detectedEyes = eyeCascadeDetector->detect(preparedImage);
     switch (detectedEyes.size())
     {
         case 0:
@@ -104,8 +104,10 @@ std::vector<cv::Rect> EyeBlinkingDetector::detectEyes(cv::Mat& image, cv::Rect& 
 
 EyeBlinkingDetector::EyeBlinkingDetector(std::string modelsPath)
 {
-    this->eyeDetector = std::make_shared<EyeDetectorCascade>(modelsPath + "/" + eyeDetectiongModel);
-    this->faceDetector = std::make_shared<FaceDetectorCascade>(modelsPath + "/" + faceDetectionModel);
+    this->eyeCascadeDetector = std::make_shared<EyeDetectorCascade>(modelsPath + "/" + eyeDetectiongModel);
+    this->faceCascadeDetector = std::make_shared<FaceDetectorCascade>(modelsPath + "/" + faceDetectionModel);
+    dlib::deserialize(modelsPath + "/" + landmarksDetectionModel) >> blinkingCascadeDetector;
+    
 }
 
 Dispatcher<BlinkDetected>& EyeBlinkingDetector::getBlinkEventDispacher() 

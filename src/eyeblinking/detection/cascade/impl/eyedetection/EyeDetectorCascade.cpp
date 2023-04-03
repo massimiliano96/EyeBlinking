@@ -19,7 +19,7 @@ EyeDetectorCascade::EyeDetectorCascade(const std::string& modelFilename) : Casca
     catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
-        throw std::runtime_error("Failed to load Eye Detector Cascade model");
+        throw std::runtime_error("Failed to load Eye CascadeDetector Cascade model");
     }
 }
 

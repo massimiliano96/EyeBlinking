@@ -19,7 +19,7 @@ FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : Cas
     catch (const cv::Exception& e)
     {
         std::cerr << e.what() << std::endl;
-        throw std::runtime_error("Failed to load Face Detector Cascade model");
+        throw std::runtime_error("Failed to load Face CascadeDetector Cascade model");
     }
 }
 
@@ -30,7 +30,6 @@ cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& roi)
         cv::Mat grayImage;
         cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(grayImage, grayImage);
-        cv::resize(grayImage, grayImage, cv::Size(300,300));
         return grayImage;
     }
     catch (const cv::Exception& e)

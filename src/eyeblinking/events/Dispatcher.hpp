@@ -43,6 +43,12 @@ class Dispatcher{
       }
     };
 
+    void disconnect()
+    {
+      _observers.resize(0);
+    }
+
+
 };
 
 #endif

@@ -67,6 +67,9 @@ int main(int argc, char* argv[])
                 break;
 
             detector.process(frame);
+
+            detector.getFaceEventDispacher().disconnect();
+            detector.getBlinkEventDispacher().disconnect();
             
             cv::imshow("Frame", frame);
 
@@ -75,7 +78,7 @@ int main(int argc, char* argv[])
             if (c == 27)
                 break;
         }
-        catch (cv::Exception e)
+        catch (cv::Exception& e)
         {
             std::cout << "Exception Thrown : " << e.what() << std::endl;
         }

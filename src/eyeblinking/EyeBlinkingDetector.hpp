@@ -5,7 +5,9 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/opencv.hpp>
 
-#include "detection/CascadeDetector.hpp"
+#include <dlib/image_processing.h>
+
+#include "detection/cascade/CascadeDetector.hpp"
 
 #include "events/BlinkDetected.hpp"
 #include "events/Dispatcher.hpp"
@@ -24,13 +26,14 @@ public:
 protected:
     cv::Rect detectFace(cv::Mat&);
     std::vector<cv::Rect> detectEyes(cv::Mat&, cv::Rect&);
-    bool checkEyeBlink(std::list<std::vector<cv::Rect>>&);
+    bool checkEyeBlink(cv::Mat&, cv::Rect&);
 
 private:
     Dispatcher<BlinkDetected> blinkDetectedDispacher;
     Dispatcher<FaceDetected> faceDetectedDispacher;
-    std::shared_ptr<CascadeDetector> faceDetector;
-    std::shared_ptr<CascadeDetector> eyeDetector;
+    std::shared_ptr<CascadeDetector> faceCascadeDetector;
+    std::shared_ptr<CascadeDetector> eyeCascadeDetector;
+    dlib::shape_predictor blinkingCascadeDetector;
 
     std::list<std::vector<cv::Rect>> detectedEyes;
 };
