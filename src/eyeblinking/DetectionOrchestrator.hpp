@@ -1,5 +1,5 @@
-#ifndef _EYE_BLINKING_DETECTOR_H_
-#define _EYE_BLINKING_DETECTOR_H_
+#ifndef _DETECTION_ORCHESTRATOR_HPP_
+#define _DETECTION_ORCHESTRATOR_HPP_
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -8,20 +8,23 @@
 #include <dlib/image_processing.h>
 
 #include "detection/cascade/CascadeDetector.hpp"
+#include "detection/landmarks/LandmarksDetector.hpp"
 
 #include "events/BlinkDetected.hpp"
 #include "events/Dispatcher.hpp"
+#include "events/EyeDetected.hpp"
 #include "events/FaceDetected.hpp"
 
-class EyeBlinkingDetector
+class DetectionOrchestrator
 {
 public:
-    EyeBlinkingDetector(std::string modelsPath);
+    explicit DetectionOrchestrator(const std::string& modelsPath);
 
     void process(cv::Mat&);
 
     Dispatcher<BlinkDetected>& getBlinkEventDispacher();
     Dispatcher<FaceDetected>& getFaceEventDispacher();
+    Dispatcher<EyeDetected>& getEyeEventDispacher();
 
 protected:
     cv::Rect detectFace(cv::Mat&);
@@ -31,11 +34,11 @@ protected:
 private:
     Dispatcher<BlinkDetected> blinkDetectedDispacher;
     Dispatcher<FaceDetected> faceDetectedDispacher;
+    Dispatcher<EyeDetected> eyeDetectedDispacher;
+
     std::shared_ptr<CascadeDetector> faceCascadeDetector;
     std::shared_ptr<CascadeDetector> eyeCascadeDetector;
-    dlib::shape_predictor blinkingCascadeDetector;
-
-    std::list<std::vector<cv::Rect>> detectedEyes;
+    std::shared_ptr<LandmarksDetector> blinkingLandmarksDetector;
 };
 
 #endif

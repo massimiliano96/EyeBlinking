@@ -6,24 +6,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Opencv
-find_package(OpenCV)
+find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Dlib
-find_package(dlib)
+find_package(dlib REQUIRED)
 
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
-set(EYE_BLINKING_PATH "src/eyeblinking" CACHE STRING "EYE_BLINKING folder")
-include_directories(${EYE_BLINKING_PATH})
-file(GLOB_RECURSE APP_EYE_BLINKING "${EYE_BLINKING_PATH}/*.hpp" "${EYE_BLINKING_PATH}/*.cpp")
+set(SOURCES_PATH "src/eyeblinking" CACHE STRING "SOURCES folder")
+include_directories(${SOURCES_PATH})
+file(GLOB_RECURSE APP_SOURCES "${SOURCES_PATH}/*.hpp" "${SOURCES_PATH}/*.cpp")
 
-# Cpp
-set(CPP_PATH "cpp" CACHE STRING "cpp folder")
-include_directories(${CPP_PATH})
-file(GLOB_RECURSE APP_CPP "${CPP_PATH}/*.h" "${CPP_PATH}/*.cpp" "${CPP_PATH}/*.hpp")
-
-add_executable(exe "src/main.cpp" ${APP_EYE_BLINKING})
+add_executable(exe "src/main.cpp" ${APP_SOURCES})
 
 target_link_libraries(exe ${OpenCV_LIBS} dlib::dlib)
 

@@ -1,5 +1,6 @@
 #include "BlinkDetected.hpp"
 
-std::string BlinkDetected::getName() {
-            return name;
-    }
+std::string BlinkDetected::getName() const
+{
+    return name;
+}

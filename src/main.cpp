@@ -1,9 +1,10 @@
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 #include <opencv2/opencv.hpp>
-#include "EyeBlinkingDetector.hpp"
+#include "DetectionOrchestrator.hpp"
 #include "events/BlinkDetected.hpp"
+#include "events/EyeDetected.hpp"
 #include "events/FaceDetected.hpp"
 
 #define MODELS_PATH "models"
@@ -15,22 +16,37 @@ void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
     {
         FaceDetected obj = event.type();
         cv::Rect roi = obj.getRoi();
-        cv::Scalar color = cv::Scalar(0, 255, 0);
+        cv::Scalar color(0, 255, 0);
         cv::rectangle(frame, roi, color, 5);
-        cv::imwrite("/Users/Massi/Desktop/Repositories/EyeBlinking/prova.png", frame);
     }
     catch (cv::Exception& e)
     {
         std::cout << "Exception Thrown : " << e.what() << std::endl;
     }
 }
-// this function write "BLINK DETECTED" on the current frame when the BlinkDetected event is posted
+
+void onEventEyeDetected(const Event<EyeDetected>& event, cv::Mat& frame)
+{
+    try
+    {
+        EyeDetected obj = event.type();
+        cv::Scalar color(0, 255, 0);
+        std::vector<cv::Rect> detectedEyes = obj.getEyes();
+        for (const cv::Rect& eye : detectedEyes)
+            cv::rectangle(frame, eye, color, 3);
+    }
+    catch (cv::Exception& e)
+    {
+        std::cout << "Exception Thrown : " << e.what() << std::endl;
+    }
+}
+
 void onEventBlinkDetected(const Event<BlinkDetected>& event, cv::Mat& frame)
 {
     try
     {
         BlinkDetected obj = event.type();
-        cv::Scalar color = cv::Scalar(0, 255, 0);
+        cv::Scalar color(0, 255, 0);
         cv::putText(frame, "BLINK DETECTED!!", cv::Point(frame.rows / 2, 50), cv::FONT_HERSHEY_DUPLEX, 1, color, 2, false);
     }
     catch (cv::Exception& e)
@@ -43,7 +59,7 @@ int main(int argc, char* argv[])
 {
     std::string workingDirectory = std::filesystem::current_path();
 
-    EyeBlinkingDetector detector(workingDirectory + "/" + MODELS_PATH);
+    DetectionOrchestrator detector(workingDirectory + "/" + MODELS_PATH);
 
     cv::VideoCapture cap(0);
     if (!cap.isOpened())
@@ -52,7 +68,7 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    while (1)
+    while (true)
     {
         try
         {
@@ -61,6 +77,7 @@ int main(int argc, char* argv[])
 
             detector.getFaceEventDispacher().subscribe(std::bind(&onEventFaceDetected, std::placeholders::_1, frame));
             detector.getBlinkEventDispacher().subscribe(std::bind(&onEventBlinkDetected, std::placeholders::_1, frame));
+            detector.getEyeEventDispacher().subscribe(std::bind(&onEventEyeDetected, std::placeholders::_1, frame));
 
             // If the frame is empty, break immediately
             if (frame.empty())
@@ -70,7 +87,7 @@ int main(int argc, char* argv[])
 
             detector.getFaceEventDispacher().disconnect();
             detector.getBlinkEventDispacher().disconnect();
-            
+
             cv::imshow("Frame", frame);
 
             // Press  ESC on keyboard to exit

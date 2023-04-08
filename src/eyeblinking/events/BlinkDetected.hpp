@@ -1,22 +1,18 @@
-#ifndef __BLINK_DETECTED_HPP__
-#define __BLINK_DETECTED_HPP__
+#ifndef _BLINK_DETECTED_HPP_
+#define _BLINK_DETECTED_HPP_
 
 #include <string>
 
-class BlinkDetected 
+class BlinkDetected
 {
-    public:
-
-    BlinkDetected ()
-    {
-        name = "BlinkDetected";
-    };
+public:
+    BlinkDetected() : name("BlinkDetected") {};
 
     ~BlinkDetected() = default;
 
-    std::string getName();
+    std::string getName() const;
 
-    private:
+private:
     std::string name = "";
 };
 

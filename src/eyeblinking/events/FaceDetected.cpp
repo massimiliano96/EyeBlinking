@@ -1,12 +1,11 @@
 #include "FaceDetected.hpp"
 
-std::string FaceDetected::getName()
+std::string FaceDetected::getName() const
 {
     return name;
 }
 
-cv::Rect FaceDetected::getRoi()
+cv::Rect FaceDetected::getRoi() const
 {
     return roi;
 }
-
