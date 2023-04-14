@@ -36,7 +36,12 @@ bool EyeBlinkingDetector::checkEyeBlink(Eye& eye, FixedSizeQueue<double, ratioBu
     buffer.push(ratio);
     if (buffer.size() >= ratioBufferSize)
     {
-        return false;
+        double variability = buffer.variability();
+        if (variability >= 0.5)
+        {
+            buffer.clear();
+            return true;
+        }
     }
     return false;
 }
