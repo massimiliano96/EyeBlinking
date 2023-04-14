@@ -33,7 +33,9 @@ void onEventEyeDetected(const Event<EyeDetected>& event, cv::Mat& frame)
         cv::Scalar color(0, 255, 0);
         std::vector<cv::Rect> detectedEyes = obj.getEyes();
         for (const cv::Rect& eye : detectedEyes)
+        {
             cv::rectangle(frame, eye, color, 3);
+        }
     }
     catch (cv::Exception& e)
     {

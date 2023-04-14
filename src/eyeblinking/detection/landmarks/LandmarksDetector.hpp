@@ -13,7 +13,7 @@ public:
 
     virtual bool detect(dlib::full_object_detection& shape) = 0;
 
-    virtual dlib::full_object_detection preProcessImage(cv::Mat&, cv::Rect&) = 0;
+    virtual dlib::full_object_detection preProcess(cv::Mat&, cv::Rect&) = 0;
 };
 
 #endif

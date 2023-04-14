@@ -2,16 +2,19 @@
 
 #include <opencv2/imgproc.hpp>
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : CascadeDetector()
 {
     try
     {
-        if (std::filesystem::exists(modelFilename)) {
+        if (std::filesystem::exists(modelFilename))
+        {
             std::cout << "File exists!" << std::endl;
-        } else {
+        }
+        else
+        {
             std::cout << "File does not exist." << std::endl;
         }
         detector.load(modelFilename);
@@ -23,7 +26,7 @@ FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : Cas
     }
 }
 
-cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& roi)
+cv::Mat FaceDetectorCascade::preProcess(cv::Mat& image, cv::Rect& roi)
 {
     try
     {
@@ -39,13 +42,19 @@ cv::Mat FaceDetectorCascade::preProcessImage(cv::Mat& image, cv::Rect& roi)
     }
 }
 
+std::vector<cv::Rect> FaceDetectorCascade::postProcess(std::vector<cv::Rect>& detectedFaces, cv::Rect& imageRect)
+{
+    // NO OP
+    return detectedFaces;
+}
+
 std::vector<cv::Rect> FaceDetectorCascade::detect(cv::Mat& image)
 {
     try
     {
         std::vector<cv::Rect> detectedFaces;
         // Detect faces
-        detector.detectMultiScale(image, detectedFaces, 1.1, 3, 0, cv::Size(60,60));
+        detector.detectMultiScale(image, detectedFaces, 1.1, 3, 0, cv::Size(60, 60));
         return detectedFaces;
     }
     catch (const cv::Exception& e)

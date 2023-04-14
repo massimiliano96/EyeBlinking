@@ -23,7 +23,6 @@ void DetectionOrchestrator::process(cv::Mat& frame)
 
         if (isBlinkDetected)
         {
-            std::cout << "Blink Detected" << std::endl;
             BlinkDetected obj;
             BlinkDetectedEvent event(obj);
             this->blinkDetectedDispacher.post(event);
@@ -41,14 +40,14 @@ void DetectionOrchestrator::process(cv::Mat& frame)
 
 bool DetectionOrchestrator::checkEyeBlink(cv::Mat& image, cv::Rect& faceRoi)
 {
-
-    return true;
+    dlib::full_object_detection faceLandmarks = blinkingLandmarksDetector->preProcess(image, faceRoi);
+    return blinkingLandmarksDetector->detect(faceLandmarks);
 }
 
 cv::Rect DetectionOrchestrator::detectFace(cv::Mat& image)
 {
     cv::Rect roi(0, 0, image.cols, image.rows);
-    cv::Mat preparedImage = faceCascadeDetector->preProcessImage(image, roi);
+    cv::Mat preparedImage = faceCascadeDetector->preProcess(image, roi);
     std::vector<cv::Rect> detectedFaces = faceCascadeDetector->detect(preparedImage);
     switch (detectedFaces.size())
     {
@@ -59,7 +58,6 @@ cv::Rect DetectionOrchestrator::detectFace(cv::Mat& image)
         }
         case 1:
         {
-            std::cout << "Face found" << std::endl;
             FaceDetected face(detectedFaces[0]);
             FaceDetectedEvent event(face);
             faceDetectedDispacher.post(event);
@@ -76,8 +74,9 @@ cv::Rect DetectionOrchestrator::detectFace(cv::Mat& image)
 
 std::vector<cv::Rect> DetectionOrchestrator::detectEyes(cv::Mat& image, cv::Rect& faceRoi)
 {
-    cv::Mat preparedImage = eyeCascadeDetector->preProcessImage(image, faceRoi);
+    cv::Mat preparedImage = eyeCascadeDetector->preProcess(image, faceRoi);
     std::vector<cv::Rect> detectedEyes = eyeCascadeDetector->detect(preparedImage);
+    detectedEyes = eyeCascadeDetector->postProcess(detectedEyes, faceRoi);
     switch (detectedEyes.size())
     {
         case 0:
@@ -87,7 +86,9 @@ std::vector<cv::Rect> DetectionOrchestrator::detectEyes(cv::Mat& image, cv::Rect
         }
         default:
         {
-            std::cout << "Eyes found" << std::endl;
+            EyeDetected eyes(detectedEyes);
+            EyeDetectedEvent event(eyes);
+            eyeDetectedDispacher.post(event);
             break;
         }
     }

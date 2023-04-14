@@ -23,7 +23,7 @@ public:
 
     bool detect(dlib::full_object_detection& shape) override;
 
-    dlib::full_object_detection preProcessImage(cv::Mat&, cv::Rect&) override;
+    dlib::full_object_detection preProcess(cv::Mat&, cv::Rect&) override;
 
     double getDistance(dlib::point&, dlib::point&) const;
 

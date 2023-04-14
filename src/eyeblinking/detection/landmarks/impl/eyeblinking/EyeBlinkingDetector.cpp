@@ -6,6 +6,7 @@
 
 bool EyeBlinkingDetector::detect(dlib::full_object_detection& shape)
 {
+    std::cout << "Blink Detection starts" << std::endl;
     Eye leftEye;
     leftEye.pointL = shape.part(36);
     leftEye.pointLT = shape.part(37);
@@ -37,7 +38,8 @@ bool EyeBlinkingDetector::checkEyeBlink(Eye& eye, FixedSizeQueue<double, ratioBu
     if (buffer.size() >= ratioBufferSize)
     {
         double variability = buffer.variability();
-        if (variability >= 0.5)
+        std::cout << "Varibility = " << variability << std::endl;
+        if (variability >= 0.01)
         {
             buffer.clear();
             return true;
@@ -46,7 +48,7 @@ bool EyeBlinkingDetector::checkEyeBlink(Eye& eye, FixedSizeQueue<double, ratioBu
     return false;
 }
 
-dlib::full_object_detection EyeBlinkingDetector::preProcessImage(cv::Mat& image, cv::Rect& roi)
+dlib::full_object_detection EyeBlinkingDetector::preProcess(cv::Mat& image, cv::Rect& roi)
 {
     IplImage iplImg = cvIplImage(image);
     dlib::cv_image<dlib::bgr_pixel> dlibColorImg(&iplImg);
