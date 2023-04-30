@@ -9,52 +9,28 @@
 
 #define MODELS_PATH "models"
 
-// this function draws the face rectangle on the current frame when the FaceDetected event is posted
-void onEventFaceDetected(const Event<FaceDetected>& event, cv::Mat& frame)
+// function to draw the face rectangle on the current frame
+void drawFaceRect(const cv::Rect& roi, cv::Mat& frame)
 {
-    try
+    cv::Scalar color(0, 255, 0);
+    cv::rectangle(frame, roi, color, 5);
+}
+
+// function to draw the eye rectangles on the current frame
+void drawEyeRects(const std::vector<cv::Rect>& detectedEyes, cv::Mat& frame)
+{
+    cv::Scalar color(0, 255, 0);
+    for (const cv::Rect& eye : detectedEyes)
     {
-        FaceDetected obj = event.type();
-        cv::Rect roi = obj.getRoi();
-        cv::Scalar color(0, 255, 0);
-        cv::rectangle(frame, roi, color, 5);
-    }
-    catch (cv::Exception& e)
-    {
-        std::cout << "Exception Thrown : " << e.what() << std::endl;
+        cv::rectangle(frame, eye, color, 3);
     }
 }
 
-void onEventEyeDetected(const Event<EyeDetected>& event, cv::Mat& frame)
+// function to draw the blink detection message on the current frame
+void drawBlinkDetectionMessage(cv::Mat& frame)
 {
-    try
-    {
-        EyeDetected obj = event.type();
-        cv::Scalar color(0, 255, 0);
-        std::vector<cv::Rect> detectedEyes = obj.getEyes();
-        for (const cv::Rect& eye : detectedEyes)
-        {
-            cv::rectangle(frame, eye, color, 3);
-        }
-    }
-    catch (cv::Exception& e)
-    {
-        std::cout << "Exception Thrown : " << e.what() << std::endl;
-    }
-}
-
-void onEventBlinkDetected(const Event<BlinkDetected>& event, cv::Mat& frame)
-{
-    try
-    {
-        BlinkDetected obj = event.type();
-        cv::Scalar color(0, 255, 0);
-        cv::putText(frame, "BLINK DETECTED!!", cv::Point(frame.rows / 2, 50), cv::FONT_HERSHEY_DUPLEX, 1, color, 2, false);
-    }
-    catch (cv::Exception& e)
-    {
-        std::cout << "Exception Thrown : " << e.what() << std::endl;
-    }
+    cv::Scalar color(0, 255, 0);
+    cv::putText(frame, "BLINK DETECTED!!", cv::Point(frame.rows / 2, 50), cv::FONT_HERSHEY_DUPLEX, 1, color, 2, false);
 }
 
 int main(int argc, char* argv[])
@@ -70,25 +46,59 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    cv::Mat frame;
+
+    // subscribe to events once at the beginning of the execution
+    detector.getFaceEventDispacher().subscribe(
+        [&frame](const Event<FaceDetected>& event)
+        {
+            try
+            {
+                drawFaceRect(event.type().getRoi(), frame);
+            }
+            catch (cv::Exception& e)
+            {
+                std::cout << "Exception Thrown : " << e.what() << std::endl;
+            }
+        });
+
+    detector.getEyeEventDispacher().subscribe(
+        [&frame](const Event<EyeDetected>& event)
+        {
+            try
+            {
+                drawEyeRects(event.type().getEyes(), frame);
+            }
+            catch (cv::Exception& e)
+            {
+                std::cout << "Exception Thrown : " << e.what() << std::endl;
+            }
+        });
+
+    detector.getBlinkEventDispacher().subscribe(
+        [&frame](const Event<BlinkDetected>& event)
+        {
+            try
+            {
+                drawBlinkDetectionMessage(frame);
+            }
+            catch (cv::Exception& e)
+            {
+                std::cout << "Exception Thrown : " << e.what() << std::endl;
+            }
+        });
+
     while (true)
     {
         try
         {
-            cv::Mat frame;
             cap >> frame;
-
-            detector.getFaceEventDispacher().subscribe(std::bind(&onEventFaceDetected, std::placeholders::_1, frame));
-            detector.getBlinkEventDispacher().subscribe(std::bind(&onEventBlinkDetected, std::placeholders::_1, frame));
-            detector.getEyeEventDispacher().subscribe(std::bind(&onEventEyeDetected, std::placeholders::_1, frame));
 
             // If the frame is empty, break immediately
             if (frame.empty())
                 break;
 
             detector.process(frame);
-
-            detector.getFaceEventDispacher().disconnect();
-            detector.getBlinkEventDispacher().disconnect();
 
             cv::imshow("Frame", frame);
 
@@ -102,7 +112,8 @@ int main(int argc, char* argv[])
             std::cout << "Exception Thrown : " << e.what() << std::endl;
         }
     }
-    cap.release();
-    cv::destroyAllWindows();
-    return 0;
+    // disconnect events at
+    detector.getFaceEventDispacher().disconnect();
+    detector.getBlinkEventDispacher().disconnect();
+    detector.getEyeEventDispacher().disconnect();
 }
