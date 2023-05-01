@@ -38,13 +38,12 @@ include_directories(${TESTS_PATH})
 file(GLOB_RECURSE APP_TESTS "${TESTS_PATH}/*.hpp" "${TESTS_PATH}/*.cpp")
 
 add_executable(test_exe ${APP_TESTS})
-target_link_libraries(test_exe eyeblinking_cpp GTest::gtest)
+target_link_libraries(test_exe eyeblinking_cpp GTest::gmock)
 target_sources(test_exe
     PUBLIC FILE_SET headers
     TYPE HEADERS
     BASE_DIRS "src" FILES
     ${EYEBLINKING_HEADERS}
 )
-target_include_directories(test_exe PRIVATE ${SOURCES_PATH})
 
 gtest_discover_tests(test_exe)

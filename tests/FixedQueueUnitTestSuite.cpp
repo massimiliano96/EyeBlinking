@@ -8,8 +8,8 @@ TEST(FixedSizeQueueTest, TestPush)
     q.push(2);
     q.push(3);
     q.push(4);
-    EXPECT_EQ(q.size(), 3);
-    EXPECT_EQ(q.front(), 2);
+    ASSERT_EQ(q.size(), 3);
+    ASSERT_EQ(q.front(), 2);
 }
 
 TEST(FixedSizeQueueTest, TestMean)
@@ -18,7 +18,7 @@ TEST(FixedSizeQueueTest, TestMean)
     q.push(1);
     q.push(2);
     q.push(3);
-    EXPECT_EQ(q.mean(), 2);
+    ASSERT_EQ(q.mean(), 2);
 }
 
 TEST(FixedSizeQueueTest, TestVariability)
@@ -27,7 +27,7 @@ TEST(FixedSizeQueueTest, TestVariability)
     q.push(1);
     q.push(2);
     q.push(3);
-    EXPECT_EQ(q.variability(), 1);
+    ASSERT_EQ(q.variability(), 1);
 }
 
 TEST(FixedSizeQueueTest, TestClear)
@@ -37,5 +37,5 @@ TEST(FixedSizeQueueTest, TestClear)
     q.push(2);
     q.push(3);
     q.clear();
-    EXPECT_EQ(q.size(), 0);
+    ASSERT_EQ(q.size(), 0);
 }
