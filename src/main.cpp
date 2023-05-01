@@ -2,10 +2,10 @@
 #include <iostream>
 
 #include <opencv2/opencv.hpp>
-#include "DetectionOrchestrator.hpp"
-#include "events/BlinkDetected.hpp"
-#include "events/EyeDetected.hpp"
-#include "events/FaceDetected.hpp"
+#include "eyeblinking/DetectionOrchestrator.hpp"
+#include "eyeblinking/events/BlinkDetected.hpp"
+#include "eyeblinking/events/EyeDetected.hpp"
+#include "eyeblinking/events/FaceDetected.hpp"
 
 #define MODELS_PATH "models"
 
