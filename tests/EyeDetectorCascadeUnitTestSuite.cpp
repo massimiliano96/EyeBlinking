@@ -16,6 +16,11 @@ TEST_F(EyeDetectorCascadeTest, ModelFileExists)
     ASSERT_NO_THROW(EyeDetectorCascade detector(modelFilename));
 }
 
+TEST_F(EyeDetectorCascadeTest, ConstructorThrowsWhenModelFileDoesNotExist)
+{
+    ASSERT_THROW(EyeDetectorCascade detector("invalid_model_file.xml"), std::runtime_error);
+}
+
 TEST_F(EyeDetectorCascadeTest, DetectEyesInImage)
 {
     // Test that eyes can be detected in an image
