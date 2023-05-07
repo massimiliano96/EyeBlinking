@@ -1,10 +1,10 @@
 #ifndef _EVENT_TYPES_HPP_
 #define _EVENT_TYPES_HPP_
 
-#include "BlinkDetected.hpp"
 #include "Event.hpp"
-#include "EyeDetected.hpp"
-#include "FaceDetected.hpp"
+#include "data/BlinkDetected.hpp"
+#include "data/EyeDetected.hpp"
+#include "data/FaceDetected.hpp"
 
 class BlinkDetectedEvent : public Event<BlinkDetected>
 {

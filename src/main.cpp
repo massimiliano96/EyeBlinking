@@ -3,9 +3,9 @@
 
 #include <opencv2/opencv.hpp>
 #include "eyeblinking/DetectionOrchestrator.hpp"
-#include "eyeblinking/events/BlinkDetected.hpp"
-#include "eyeblinking/events/EyeDetected.hpp"
-#include "eyeblinking/events/FaceDetected.hpp"
+#include "eyeblinking/events/data/BlinkDetected.hpp"
+#include "eyeblinking/events/data/EyeDetected.hpp"
+#include "eyeblinking/events/data/FaceDetected.hpp"
 
 #define MODELS_PATH "models"
 

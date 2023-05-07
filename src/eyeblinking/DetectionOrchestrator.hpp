@@ -10,10 +10,10 @@
 #include "detection/cascade/CascadeDetector.hpp"
 #include "detection/landmarks/LandmarksDetector.hpp"
 
-#include "events/BlinkDetected.hpp"
 #include "events/Dispatcher.hpp"
-#include "events/EyeDetected.hpp"
-#include "events/FaceDetected.hpp"
+#include "events/data/BlinkDetected.hpp"
+#include "events/data/EyeDetected.hpp"
+#include "events/data/FaceDetected.hpp"
 
 class DetectionOrchestrator
 {

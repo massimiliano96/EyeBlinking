@@ -3,7 +3,7 @@
 #include "detection/cascade/impl/facedetection/FaceDetectorCascade.hpp"
 #include "detection/landmarks/impl/eyeblinking/EyeBlinkingDetector.hpp"
 #include "events/EventTypes.hpp"
-#include "events/FaceDetected.hpp"
+#include "events/data/FaceDetected.hpp"
 
 #include <dlib/opencv.h>
 #include <opencv2/core/types_c.h>
