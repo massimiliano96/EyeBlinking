@@ -16,6 +16,7 @@ EyeDetectorCascade::EyeDetectorCascade(const std::string& modelFilename) : Casca
         else
         {
             std::cout << "File does not exist." << std::endl;
+            throw std::runtime_error("Model does not exist");
         }
         detector.load(modelFilename);
     }
