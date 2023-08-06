@@ -7,7 +7,7 @@ class FaceDetectorCascadeTest : public testing::Test
 public:
     // Test data
     std::string modelFilename = "models/haarcascade_frontalface_default.xml";
-    cv::Mat image = cv::imread("tests/testData/TestImg.jpg");
+    cv::Mat image = cv::imread("testData/TestImg.jpg");
 };
 
 TEST_F(FaceDetectorCascadeTest, ModelFileExists)

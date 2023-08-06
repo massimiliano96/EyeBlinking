@@ -32,6 +32,7 @@ enable_testing()
 find_package(GTest REQUIRED)
 
 file(COPY "models" DESTINATION ".")
+file(COPY "tests/testData" DESTINATION ".")
 
 set(TESTS_PATH "tests" CACHE STRING "TESTS folder")
 include_directories(${TESTS_PATH})

@@ -7,7 +7,7 @@ class EyeDetectorCascadeTest : public testing::Test
 public:
     // Test data
     std::string modelFilename = "models/haarcascade_eye.xml";
-    cv::Mat image = cv::imread("tests/testData/TestImg.jpg");
+    cv::Mat image = cv::imread("testData/TestImg.jpg");
 };
 
 TEST_F(EyeDetectorCascadeTest, ModelFileExists)
