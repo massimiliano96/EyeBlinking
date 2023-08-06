@@ -17,11 +17,34 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(SOURCES_PATH "src/eyeblinking" CACHE STRING "SOURCES folder")
 include_directories(${SOURCES_PATH})
 file(GLOB_RECURSE APP_SOURCES "${SOURCES_PATH}/*.hpp" "${SOURCES_PATH}/*.cpp")
+file(GLOB_RECURSE EYEBLINKING_HEADERS "${SOURCES_PATH}/*.hpp" "${SOURCES_PATH}/*.h")
 
-add_executable(exe "src/main.cpp" ${APP_SOURCES})
+add_library(eyeblinking_cpp ${APP_SOURCES})
+target_link_libraries(eyeblinking_cpp ${OpenCV_LIBS} dlib::dlib)
 
-target_link_libraries(exe ${OpenCV_LIBS} dlib::dlib)
+add_executable(exe "src/main.cpp")
+target_link_libraries(exe eyeblinking_cpp ${OpenCV_LIBS} dlib::dlib)
+
+include(GoogleTest)
+
+enable_testing()
+
+find_package(GTest REQUIRED)
 
 file(COPY "models" DESTINATION ".")
+file(COPY "tests/testData" DESTINATION ".")
 
-add_test(NAME array_tests WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin COMMAND array_tests)
+set(TESTS_PATH "tests" CACHE STRING "TESTS folder")
+include_directories(${TESTS_PATH})
+file(GLOB_RECURSE APP_TESTS "${TESTS_PATH}/*.hpp" "${TESTS_PATH}/*.cpp")
+
+add_executable(test_exe ${APP_TESTS})
+target_link_libraries(test_exe eyeblinking_cpp GTest::gmock)
+target_sources(test_exe
+    PUBLIC FILE_SET headers
+    TYPE HEADERS
+    BASE_DIRS "src" FILES
+    ${EYEBLINKING_HEADERS}
+)
+
+gtest_discover_tests(test_exe)

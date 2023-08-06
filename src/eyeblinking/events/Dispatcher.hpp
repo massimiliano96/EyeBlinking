@@ -22,6 +22,11 @@ public:
         observers.push_back(funct);
     };
 
+    const std::vector<SlotType> getObservers() const
+    {
+        return observers;
+    };
+
     void post(Event<T>& event)
     {
         if (observers.size() == 0)

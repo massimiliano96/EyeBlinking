@@ -16,6 +16,7 @@ FaceDetectorCascade::FaceDetectorCascade(const std::string& modelFilename) : Cas
         else
         {
             std::cout << "File does not exist." << std::endl;
+            throw std::runtime_error("Model does not exist");
         }
         detector.load(modelFilename);
     }

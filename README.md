@@ -3,9 +3,9 @@
     ```
     sudo apt install libopencv-dev python3-opencv
     ```
-- Cmake (version > 3.22.x)
+- Cmake (version > 3.23.x)
     ```
-    sudo apt install cmake
+    sudo apt install cmake (https://apt.kitware.com/)
     ```
 - dlib (version > 19.24.x)
     ```
@@ -25,6 +25,10 @@
     cd /usr/src/gtest
     sudo make
     sudo cp lib/*.a /usr/lib
+    ```
+- gMock (version > 1.11.x)
+    ```
+    sudo apt-get install libgmock-dev
     ```
 
 ## WORK IN PROGRESS
